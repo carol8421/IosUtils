@@ -66,6 +66,14 @@ public class FileStorage {
         return nil
     }
     
+    public func Exists(_ key: String) -> Bool {
+        guard let path = path else { return false }
+        let final = path.appendingPathComponent(key).path
+        
+        let fileManager:FileManager = FileManager.default
+        return fileManager.fileExists(atPath: final)
+    }
+    
     func getExtension(_ name:String) -> String {
         let parts = name.components(separatedBy: "/").filter { !$0.isEmpty };
         if parts.count > 0 {
