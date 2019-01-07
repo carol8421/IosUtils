@@ -32,7 +32,7 @@ public extension Data {
         self.append(contentsOf: arr)
     }
     
-    func append(fileURL: URL) throws {
+    public func append(fileURL: URL) throws {
         if let fileHandle = FileHandle(forWritingAtPath: fileURL.path) {
             defer {
                 fileHandle.closeFile()
@@ -45,15 +45,15 @@ public extension Data {
         }
     }
     
-    func toHex() -> String {
+    public func toHex() -> String {
         return map { String(format: "%02hhX", $0) }.joined()
     }
     
-    func toHex(from:Int, to:Int) -> String {
+    public func toHex(from:Int, to:Int) -> String {
         return self.subdata(in: from..<to).toHex()
     }
     
-    func toArrayUInt8() -> [UInt8] {
+    public func toArrayUInt8() -> [UInt8] {
         var array = [UInt8]()
         self.withUnsafeBytes {  (pointer: UnsafePointer<UInt8>) in
             array = Array(UnsafeBufferPointer(start: pointer, count: self.count))
@@ -61,7 +61,7 @@ public extension Data {
         return array
     }
     
-    static func fromArrayUInt8(_ arr:[UInt8]) -> Data {
+    static public func fromArrayUInt8(_ arr:[UInt8]) -> Data {
         var data = Data()
         data.append(contentsOf: arr)
         return data
