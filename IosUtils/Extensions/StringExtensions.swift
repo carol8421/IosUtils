@@ -203,7 +203,7 @@ extension String {
 
 extension String {
     
-    func fromBase64() -> String? {
+    public func fromBase64() -> String? {
         guard let data = Data(base64Encoded: self) else {
             return nil
         }
@@ -211,11 +211,11 @@ extension String {
         return String(data: data, encoding: .utf8)
     }
     
-    func toBase64() -> String {
+    public func toBase64() -> String {
         return self.utf8Encoded.base64EncodedString()
     }
     
-    static func fromResource(_ name:String, ext:String) -> String? {
+    static public func fromResource(_ name:String, ext:String) -> String? {
         if let filepath = Bundle.main.path(forResource: name, ofType: ext) {
             return try? String(contentsOfFile: filepath, encoding: .utf8)
         }
