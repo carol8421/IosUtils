@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.author           = { 'Woko' => 'woko@centrum.cz' }
   s.source           = { :git => "https://github.com/woko666/IosUtils.git" }
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
 
   s.source_files  = ["IosUtils/**/*.swift"]
   s.library = 'iconv'

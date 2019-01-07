@@ -111,8 +111,8 @@ public class LRUCacheFiles {
         writeFile(final,data:val)
     }
     
-    func setNode(_ key:String, url:URL) -> Bool {
-        guard let path = path else { return false }
+    func setNode(_ key:String, url:URL) -> URL? {
+        guard let path = path else { return nil }
         let final = path.appendingPathComponent(key)
         
         var wasSuccess = false
@@ -122,7 +122,7 @@ public class LRUCacheFiles {
         } catch {
             print(error)
         }
-        return wasSuccess
+        return wasSuccess ? final : nil
     }
     
     func deleteNode(_ key:String) {
@@ -133,7 +133,7 @@ public class LRUCacheFiles {
         _ = try? fileManager.removeItem(atPath: final)
     }
     
-    public func hasKey(_ key:String) -> Bool {
+    public func HasKey(_ key:String) -> Bool {
         return findNode(key) != nil
     }
     
@@ -185,7 +185,8 @@ public class LRUCacheFiles {
         }
     }
     
-    public func Set(_ key:String, url: URL) {
+    public func Set(_ key:String, url: URL) -> URL? {
+        var res:URL?
         lock.locked {
             // Value was provided. Find the corresponding node, update its value, and move
             // it to the front of the list. If it's not found, create it at the front.
@@ -194,7 +195,7 @@ public class LRUCacheFiles {
                 removeNode(node)
             }
             let newNode = Node(key: key, size: url.fileSize)
-            if setNode(key, url:url) {
+            if let finalUrl = setNode(key, url:url) {
                 addNodeToFront(newNode)
                 size += newNode.size
                 
@@ -205,8 +206,10 @@ public class LRUCacheFiles {
                     size -= item.size
                     deleteNode(item.key)
                 }
+                res = finalUrl
             }
         }
+        return res
     }
     
     // MARK: -

@@ -41,12 +41,14 @@ open class ThreadPoolTaskRunner: AbstractInterruptibleRunnable {
     private var queue:[ThreadPoolTask] = []
     private var runningTasks: [ThreadPoolTask] = []
     private var mutex: pthread_mutex_t
+    private var threadsMutex: pthread_mutex_t
     private var condition: pthread_cond_t
     private var sumTasks = 0
     private var queuedTasks = 0
     public var shutdownThreads = false
     private var isStopped = false
     private var workerLock = Lock()
+    static let CLOSE_TIMEOUT:Double = 60.0
     
     public func locked(_ f: () -> ()) {
         workerLock.locked(f)
@@ -69,38 +71,57 @@ open class ThreadPoolTaskRunner: AbstractInterruptibleRunnable {
     }
     
     @objc class func threadEntryPoint(_ threadPool: ThreadPool) {
+        var lastAction = Date().timeIntervalSince1970
         while (true) {
             var task: ThreadPoolTask!
             
-            pthread_mutex_lock(&threadPool.mutex);
+            pthread_mutex_lock(&threadPool.threadsMutex)
             
             while (true)
             {
+                if (Date().timeIntervalSince1970 - lastAction) > ThreadPool.CLOSE_TIMEOUT {
+                    //print("killing thread")
+                    pthread_mutex_lock(&threadPool.mutex)
+                    threadPool.threads.remove(element: Thread.current)
+                    pthread_mutex_unlock(&threadPool.mutex)
+                    
+                    pthread_mutex_unlock(&threadPool.threadsMutex)
+                    return
+                }
                 if threadPool.shutdownThreads {
-                    pthread_mutex_unlock(&threadPool.mutex);
+                    pthread_mutex_unlock(&threadPool.threadsMutex)
                     return
                 }
                 if threadPool.queue.count == 0 { //while threadPool.queue.count == 0 {
-                    pthread_cond_wait(&threadPool.condition, &threadPool.mutex);
+                    //pthread_cond_wait(&threadPool.condition, &threadPool.threadsMutex);
+                    var time_to_wait = timespec(tv_sec:60,tv_nsec:0)
+                    pthread_cond_timedwait_relative_np(&threadPool.condition, &threadPool.threadsMutex, &time_to_wait)
                 }
                 
+                pthread_mutex_lock(&threadPool.mutex)
                 if threadPool.queue.count != 0 {
                     task = threadPool.queue[0]
                 }
                 
                 if task != nil {
                     threadPool.queue = threadPool.queue.filter{ $0 !== task }
+                    
+                    pthread_mutex_unlock(&threadPool.mutex)
                     /*if let index = threadPool.queue.index(of: task) {
                         threadPool.queue.remove(at: index)
                     }*/
                     
                     break
+                } else {
+                    pthread_mutex_unlock(&threadPool.mutex)
                 }
             }
             if task != nil {
+                pthread_mutex_lock(&threadPool.mutex)
                 threadPool.runningTasks.append(task)
+                pthread_mutex_unlock(&threadPool.mutex)
             }
-            pthread_mutex_unlock(&threadPool.mutex);
+            pthread_mutex_unlock(&threadPool.threadsMutex);
             
             if task != nil {
                 autoreleasepool {
@@ -109,6 +130,7 @@ open class ThreadPoolTaskRunner: AbstractInterruptibleRunnable {
                 pthread_mutex_lock(&threadPool.mutex);
                 threadPool.runningTasks = threadPool.runningTasks.filter{ $0 !== task }
                 threadPool.queuedTasks -= 1
+                lastAction = Date().timeIntervalSince1970
                 pthread_mutex_unlock(&threadPool.mutex);
                 //pthread_cond_broadcast(&threadPool.condition)
             }
@@ -120,8 +142,10 @@ open class ThreadPoolTaskRunner: AbstractInterruptibleRunnable {
         
         self.threadCount = threadCount
         self.mutex = pthread_mutex_t()
+        self.threadsMutex = pthread_mutex_t()
         self.condition = pthread_cond_t()
         pthread_mutex_init(&self.mutex, nil)
+        pthread_mutex_init(&self.threadsMutex, nil)
         pthread_cond_init(&self.condition, nil)
         
         super.init()
@@ -136,6 +160,7 @@ open class ThreadPoolTaskRunner: AbstractInterruptibleRunnable {
     
     deinit {
         pthread_mutex_destroy(&self.mutex)
+        pthread_mutex_destroy(&self.threadsMutex)
         pthread_cond_destroy(&self.condition)
     }
     

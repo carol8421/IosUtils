@@ -10,16 +10,30 @@ import SQLite
 
 public class KeyValSqliteDB: KeyValCacheBase, KeyValDB {
     var db:Connection?
+    var name:String?
     let table = Table("keyval")
     let keyDb = Expression<String>("key")
     let valDb = Expression<SQLite.Blob>("val")
     let typeDb = Expression<String>("type")
+    var isPrecached = false
+    
+    public func BackUp() -> Data? {
+        var res:Data?
+        if let name = name {
+            let fileManager:FileManager = FileManager.default
+            let directory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let documentUrl = directory.appendingPathComponent(name)
+            res = documentUrl.readFile()
+        }
+        return res
+    }
     
     public func Open(_ name: String) {
         let fileManager:FileManager = FileManager.default
         let directory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
         let documentUrl = directory.appendingPathComponent(name)
         db = try? Connection(documentUrl.path)
+        self.name = name
         
         if let db = db {
             _ = try? db.run(table.create { t in
@@ -29,6 +43,14 @@ public class KeyValSqliteDB: KeyValCacheBase, KeyValDB {
             })
             _ = try? db.run(table.createIndex(typeDb, ifNotExists: true))
         }
+    }
+    
+    func swiftClassFromString(_ className: String) -> AnyClass! {
+        if let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String? {
+            let fAppName = appName.replacingOccurrences(of: " ", with: "_", options: .literal, range: nil)
+            return NSClassFromString("\(fAppName).\(className)")
+        }
+        return nil;
     }
     
     public func Close() {
@@ -46,7 +68,7 @@ public class KeyValSqliteDB: KeyValCacheBase, KeyValDB {
                 data.append(contentsOf: row[valDb].bytes)
                 let val = deserialize(data,clazz:type)
                 if let val = val {
-                    safePutInCache(key, val: val, size: row[valDb].bytes.count)
+                    safePutInCache(key, val: val, size: row[valDb].bytes.count, type:type)
                     return val
                 }
             }
@@ -56,8 +78,12 @@ public class KeyValSqliteDB: KeyValCacheBase, KeyValDB {
     
     public func GetAll<T>(type:T.Type) -> [T] where T : KeyValItem {
         guard let db = db else { return [] }
-        var res:[T] = []
+        if let tmp = getAllFromCache(type), tmp.count > 0 {
+            return tmp
+        }
         
+        var res:[T] = []
+        var size = 0
         do {
             for row in try db.prepare(table.select(valDb).filter(typeDb == String(describing: type))) {
                 var data = Data()
@@ -65,11 +91,27 @@ public class KeyValSqliteDB: KeyValCacheBase, KeyValDB {
                 let val = deserialize(data,clazz:type)
                 if let val = val {
                     res.append(val)
+                    size += data.count
                 }
             }
         } catch { return []}
         
+        putAllInCache(res, clazz: type, size: size)
+        
         return res
+    }
+    
+    public func DumpAll() {
+        guard let db = db else { return }
+        do {
+            for row in try db.prepare(table.select(keyDb,valDb,typeDb)) {
+                var data = Data()
+                data.append(contentsOf: row[valDb].bytes)
+                if let val = String(data:data,encoding:.utf8) {
+                    print(row[keyDb],row[typeDb],val)
+                }
+            }
+        } catch { }
     }
     
     public func Set<T: KeyValItem>(_ val: T) {
@@ -78,7 +120,7 @@ public class KeyValSqliteDB: KeyValCacheBase, KeyValDB {
         let data = serialize(val)        
         let insert = table.insert(or: .replace, keyDb <- val.pkey, valDb <- data.datatypeValue, typeDb <- String(describing: T.self))
         _ = try? db.run(insert)
-        safePutInCache(val.pkey, val: val, size: data.count)
+        safePutInCache(val.pkey, val: val, size: data.count, type:T.self)
     }
     
     public func Delete(_ key: String) {

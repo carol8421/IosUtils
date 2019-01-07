@@ -40,6 +40,21 @@ public class LRUCache<Key: Hashable, Value: Sizeable> {
         self.capacity = capacity
     }
     
+    public func Clear() {
+        lock.locked {
+            self.queue = []
+            self.size = 0
+        }
+    }
+    
+    public func GetAll(_ callback:(Value)->Bool) -> [Value] {
+        var res:[Value] = []
+        lock.locked {
+            res = queue.filter { callback($0.value) }.map { $0.value }
+        }
+        return res
+    }
+    
     public subscript (key: Key) -> Value? {
         get {
             var res:Value?

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F8102EA4216229D2004E5103 /* DataReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8102EA2216229D2004E5103 /* DataReader.swift */; };
+		F8102EA5216229D2004E5103 /* DataBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8102EA3216229D2004E5103 /* DataBuilder.swift */; };
 		F8662804212031790024B379 /* IosUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F8662802212031790024B379 /* IosUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F86AD9F3214668E4004D154C /* TmpFileMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86AD9F2214668E4004D154C /* TmpFileMgr.swift */; };
 		F86AD9F8214669C4004D154C /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86AD9F7214669C4004D154C /* PathUtils.swift */; };
@@ -22,7 +24,11 @@
 		F86ADA0F214673BD004D154C /* SegueHandlerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86ADA06214673BD004D154C /* SegueHandlerType.swift */; };
 		F86ADA10214673BD004D154C /* JSONExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86ADA07214673BD004D154C /* JSONExtensions.swift */; };
 		F86ADA1421467744004D154C /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86ADA1321467744004D154C /* DataExtensions.swift */; };
+		F87F803621503532008450B1 /* RandomCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F803521503532008450B1 /* RandomCache.swift */; };
 		F886E258212180DA00B076E0 /* FileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F886E257212180DA00B076E0 /* FileStorage.swift */; };
+		F890F4E721622EED00229662 /* BinaryCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F890F4E621622EED00229662 /* BinaryCodable.swift */; };
+		F890F4E9216264D700229662 /* BinaryCodableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F890F4E8216264D700229662 /* BinaryCodableArray.swift */; };
+		F890F4EB216264EC00229662 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F890F4EA216264EC00229662 /* Extensions.swift */; };
 		F8D1D2F7212C9F740025CA7B /* LRUCacheFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D1D2F6212C9F740025CA7B /* LRUCacheFiles.swift */; };
 		F8D5A9BF21203B0800909C01 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D5A9B721203B0700909C01 /* Lock.swift */; };
 		F8D5A9C021203B0800909C01 /* WeakRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D5A9B821203B0700909C01 /* WeakRef.swift */; };
@@ -39,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F8102EA2216229D2004E5103 /* DataReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataReader.swift; sourceTree = "<group>"; };
+		F8102EA3216229D2004E5103 /* DataBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBuilder.swift; sourceTree = "<group>"; };
 		F86627FF212031790024B379 /* IosUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IosUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8662802212031790024B379 /* IosUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IosUtils.h; sourceTree = "<group>"; };
 		F8662803212031790024B379 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,7 +64,11 @@
 		F86ADA06214673BD004D154C /* SegueHandlerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueHandlerType.swift; sourceTree = "<group>"; };
 		F86ADA07214673BD004D154C /* JSONExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtensions.swift; sourceTree = "<group>"; };
 		F86ADA1321467744004D154C /* DataExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
+		F87F803521503532008450B1 /* RandomCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomCache.swift; sourceTree = "<group>"; };
 		F886E257212180DA00B076E0 /* FileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorage.swift; sourceTree = "<group>"; };
+		F890F4E621622EED00229662 /* BinaryCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryCodable.swift; sourceTree = "<group>"; };
+		F890F4E8216264D700229662 /* BinaryCodableArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryCodableArray.swift; sourceTree = "<group>"; };
+		F890F4EA216264EC00229662 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F8D1D2F6212C9F740025CA7B /* LRUCacheFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LRUCacheFiles.swift; sourceTree = "<group>"; };
 		F8D5A9B721203B0700909C01 /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		F8D5A9B821203B0700909C01 /* WeakRef.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakRef.swift; sourceTree = "<group>"; };
@@ -83,6 +95,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F8102EA1216229BA004E5103 /* Serialization */ = {
+			isa = PBXGroup;
+			children = (
+				F8102EA3216229D2004E5103 /* DataBuilder.swift */,
+				F8102EA2216229D2004E5103 /* DataReader.swift */,
+				F890F4E621622EED00229662 /* BinaryCodable.swift */,
+				F890F4E8216264D700229662 /* BinaryCodableArray.swift */,
+				F890F4EA216264EC00229662 /* Extensions.swift */,
+			);
+			path = Serialization;
+			sourceTree = "<group>";
+		};
 		F86627F5212031790024B379 = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +126,7 @@
 		F8662801212031790024B379 /* IosUtils */ = {
 			isa = PBXGroup;
 			children = (
+				F8102EA1216229BA004E5103 /* Serialization */,
 				F86AD9F421466975004D154C /* Utils */,
 				F8D5A9D02120AF5E00909C01 /* Extensions */,
 				F8D5A9C721203B5900909C01 /* KeyValStore */,
@@ -148,6 +173,7 @@
 				F886E257212180DA00B076E0 /* FileStorage.swift */,
 				F8D1D2F6212C9F740025CA7B /* LRUCacheFiles.swift */,
 				F86AD9F2214668E4004D154C /* TmpFileMgr.swift */,
+				F87F803521503532008450B1 /* RandomCache.swift */,
 			);
 			path = KeyValStore;
 			sourceTree = "<group>";
@@ -259,9 +285,13 @@
 				F86ADA0A214673BD004D154C /* UIButtonExtensions.swift in Sources */,
 				F8D5A9C221203B0800909C01 /* Threading.swift in Sources */,
 				F8D5A9BF21203B0800909C01 /* Lock.swift in Sources */,
+				F87F803621503532008450B1 /* RandomCache.swift in Sources */,
 				F8D5A9CD21203B6B00909C01 /* LRUCache.swift in Sources */,
 				F8D1D2F7212C9F740025CA7B /* LRUCacheFiles.swift in Sources */,
+				F890F4E9216264D700229662 /* BinaryCodableArray.swift in Sources */,
+				F8102EA5216229D2004E5103 /* DataBuilder.swift in Sources */,
 				F886E258212180DA00B076E0 /* FileStorage.swift in Sources */,
+				F8102EA4216229D2004E5103 /* DataReader.swift in Sources */,
 				F86AD9FC21466CED004D154C /* XXHash.swift in Sources */,
 				F86ADA09214673BD004D154C /* UIViewControllerExtensions.swift in Sources */,
 				F8D5A9C121203B0800909C01 /* AtomicVar.swift in Sources */,
@@ -273,6 +303,8 @@
 				F8D5A9C321203B0800909C01 /* SynchronizedArray.swift in Sources */,
 				F86ADA0B214673BD004D154C /* URLExtensions.swift in Sources */,
 				F86ADA1421467744004D154C /* DataExtensions.swift in Sources */,
+				F890F4E721622EED00229662 /* BinaryCodable.swift in Sources */,
+				F890F4EB216264EC00229662 /* Extensions.swift in Sources */,
 				F8D5A9C521203B0800909C01 /* Runnable.swift in Sources */,
 				F86ADA08214673BD004D154C /* StringExtensions.swift in Sources */,
 			);

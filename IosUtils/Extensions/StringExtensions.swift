@@ -3,6 +3,18 @@ import Foundation
 // regex
 public extension String
 {
+    public var nfc:String {
+        return (self as NSString).precomposedStringWithCanonicalMapping
+    }
+    
+    public var nfd:String {
+        return (self as NSString).decomposedStringWithCanonicalMapping
+    }
+    
+    public var asciiEscaped:String {
+        return self.unicodeScalars.map { $0.escaped(asASCII: true).replacingOccurrences(of: "{", with: "").replacingOccurrences(of: "}", with: "") }.reduce("",+)
+    }
+    
     public func isMatch(_ regex: String, options: NSRegularExpression.Options = .caseInsensitive) -> Bool
     {
         return getMatches(regex, options:options).count > 0
@@ -35,10 +47,10 @@ public extension String
         
         guard let match = matches.first else { return results }
         
-        let lastRangeIndex = match.numberOfRanges - 1
+        let lastRangeIndex = match.numberOfRanges
         guard lastRangeIndex >= 1 else { return results }
         
-        for i in 1...lastRangeIndex {
+        for i in 0..<lastRangeIndex {
             let capturedGroupIndex = match.range(at: i)
             let matchedString = (self as NSString).substring(with: capturedGroupIndex)
             results.append(matchedString)
@@ -57,9 +69,39 @@ public extension Character {
 
 public extension String {
     
-    public var urlEncoded:String {
+    public var urlEncodedQuery:String {
         get {
             return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? self
+        }
+    }
+    
+    public var urlEncodedUser:String {
+        get {
+            return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlUserAllowed) ?? self
+        }
+    }
+    
+    public var urlEncodedPassword:String {
+        get {
+            return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPasswordAllowed) ?? self
+        }
+    }
+    
+    public var urlEncodedHost:String {
+        get {
+            return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed) ?? self
+        }
+    }
+    
+    public var urlEncodedPath:String {
+        get {
+            return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed) ?? self
+        }
+    }
+    
+    public var urlEncodedStrong:String {
+        get {
+            return self.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn:"/")) ?? self
         }
     }
     
@@ -139,5 +181,22 @@ public extension String {
             index += 1
         }
         return nil
+    }
+}
+
+extension String {
+    public func appendLineToURL(_ fileURL: URL) {
+        _ = try? (self + "\n").appendToURL(fileURL: fileURL)
+    }
+    
+    public func appendToURL(fileURL: URL) throws {
+        let data = self.data(using: String.Encoding.utf8)!
+        try data.append(fileURL: fileURL)
+    }
+    
+    public func appendToDocsFile(_ name:String) {
+        let dir: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last! as URL
+        let url = dir.appendingPathComponent(name)
+        appendLineToURL(url)
     }
 }

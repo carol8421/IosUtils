@@ -12,7 +12,7 @@ import UIKit
 
 public extension UIViewController {
     public func embedContainerView(_ controller:UIViewController, containerView:UIView) {
-        addChildViewController(controller)
+        addChild(controller)
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(controller.view)
         
@@ -23,6 +23,6 @@ public extension UIViewController {
             controller.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             ])
         
-        controller.didMove(toParentViewController: self)
+        controller.didMove(toParent: self)
     }
 }

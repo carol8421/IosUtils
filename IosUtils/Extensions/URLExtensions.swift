@@ -28,6 +28,13 @@ public extension URL {
         return queryStrings
     }
     
+    public func readFile() -> Data? {
+        if let data = NSData(contentsOfFile: self.path) {
+            return data as Data
+        }
+        return nil
+    }
+    
     public var fileSize: Int {
         get {
             let attr = try? FileManager.default.attributesOfItem(atPath: self.path)
@@ -49,9 +56,10 @@ public extension URL {
     public func readLast(_ toRead:Int) -> Data? {
         if let file = try? FileHandle(forReadingFrom: self) {
             let length = file.seekToEndOfFile()
-            file.seek(toFileOffset: length.advanced(by: -toRead))
-            let data = file.readDataToEndOfFile()
-            return data
+            if length >= toRead {
+                file.seek(toFileOffset: length.advanced(by: -toRead))
+                return file.readDataToEndOfFile()
+            }
         }
         return nil
     }

@@ -38,4 +38,12 @@ public class TmpFileMgr {
         let key = UUID().uuidString
         return path.appendingPathComponent(key)
     }
+    
+    public static func Delete(_ url:URL?) {
+        guard let url = url else { return }
+        let fileManager:FileManager = FileManager.default
+        if fileManager.fileExists(atPath: url.path) {
+            _ = try? fileManager.removeItem(at: url)
+        }
+    }
 }

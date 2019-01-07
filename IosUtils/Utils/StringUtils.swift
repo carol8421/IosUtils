@@ -23,12 +23,18 @@ public class StringUtils {
     
     public static func ParseInt(_ text:String, maxLen:Int = Int.max) -> Int {
         let len = min(maxLen,text.count)
-        var val = 0
+        var val:Int = 0
         for i in 0..<len {
             let ch = text.sub(i).first!.ascii
             if let ch = ch {
                 if ch >= 48 && ch <= 57 {
-                    val = val * 10 + Int(ch - 48)
+                    let intVal = Int(ch - 48)
+                    let newVal = val &* 10 &+ intVal
+                    if newVal < val {
+                        return val
+                    } else {
+                        val = newVal
+                    }
                 }
             }
         }
@@ -52,7 +58,7 @@ public class StringUtils {
     }
     
     public static func GetSearchTerms(_ text:String) -> [String] {
-        return text.split(separator: " ").filter { $0.count > 1 }.map { $0.lowercased() }
+        return text.split(separator: " ").filter { $0.count > 2 }.map { $0.lowercased() }
     }
     
     public static func HasSearchTerms(_ text:String) -> Bool {

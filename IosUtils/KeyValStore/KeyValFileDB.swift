@@ -54,7 +54,7 @@ public class KeyValFileDB: KeyValCacheBase, KeyValDB {
         if let data = readFile(final) {
             let val = deserialize(data,clazz:type)
             if let val = val {
-                safePutInCache(key, val: val, size: data.count)
+                safePutInCache(key, val: val, size: data.count, type: type)
                 return val
             }
         }
@@ -98,7 +98,7 @@ public class KeyValFileDB: KeyValCacheBase, KeyValDB {
         let data = serialize(val)
         lock.locked {
             writeFile(final,data:data)
-            safePutInCache(val.pkey, val: val, size: data.count)
+            safePutInCache(val.pkey, val: val, size: data.count, type: T.self)
             self.refreshFiles()
         }
     }

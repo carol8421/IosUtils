@@ -9,7 +9,7 @@
 public class FileStorage {
     var path:URL?
     let lock = KVLock()
-    var size = 0
+    var size:Int64 = 0
     var infos:[FileInfo] = []
     
     public init() {
@@ -36,13 +36,17 @@ public class FileStorage {
             infos = files.map {
                 let date = (try? $0.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast
                 let size = (try? $0.resourceValues(forKeys: [.fileSizeKey]))?.fileSize ?? 0
-                self.size += size
-                return FileInfo(name:$0.lastPathComponent, size: size, date: Int(date.timeIntervalSince1970))
+                //self.size += size
+                return FileInfo(name:$0.lastPathComponent, size: Int64(size), date: Int(date.timeIntervalSince1970))
                 }.sorted(by: { (left, right) -> Bool in
                     return left.date < right.date
                 })
             size = infos.map { $0.size }.reduce(0,+)
         }
+    }
+    
+    public func GetSize() -> Int64? {
+        return size
     }
     
     public func Get(_ key: String) -> Data? {
@@ -92,8 +96,8 @@ public class FileStorage {
         }
     }
     
-    public func Set(_ name:String, url: URL) -> Bool {
-        guard let path = path else { return false }
+    public func Set(_ name:String, url: URL) -> URL? {
+        guard let path = path else { return nil }
         let final = path.appendingPathComponent(name)
         
         var wasSuccess = false
@@ -106,7 +110,7 @@ public class FileStorage {
                 print(error)
             }
         }
-        return wasSuccess
+        return wasSuccess ? final : nil
     }
     
     public func Delete(_ key: String) {
@@ -142,7 +146,7 @@ public class FileStorage {
     
     public struct FileInfo {
         public var name:String = ""
-        public var size:Int = 0
+        public var size:Int64 = 0
         public var date:Int = 0
     }
     
