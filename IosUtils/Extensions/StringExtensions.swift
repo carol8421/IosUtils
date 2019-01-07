@@ -200,3 +200,25 @@ extension String {
         appendLineToURL(url)
     }
 }
+
+extension String {
+    
+    func fromBase64() -> String? {
+        guard let data = Data(base64Encoded: self) else {
+            return nil
+        }
+        
+        return String(data: data, encoding: .utf8)
+    }
+    
+    func toBase64() -> String {
+        return self.utf8Encoded.base64EncodedString()
+    }
+    
+    static func fromResource(_ name:String, ext:String) -> String? {
+        if let filepath = Bundle.main.path(forResource: name, ofType: ext) {
+            return try? String(contentsOfFile: filepath, encoding: .utf8)
+        }
+        return nil
+    }
+}

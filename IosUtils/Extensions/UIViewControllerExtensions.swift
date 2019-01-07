@@ -35,17 +35,17 @@ extension UIViewController {
 }
 
 extension UIViewController {
-    public func initBackgroundable() {
+    open func initBackgroundable() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationBecameActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationBecameInactive), name: UIApplication.willResignActiveNotification, object: nil) // selector "methodname:" also possible?
         applicationBecameActive(notification:NSNotification(name:UIApplication.didBecomeActiveNotification,object:nil))
     }
     
-    @objc public func applicationBecameActive(notification: NSNotification) {
+    @objc open func applicationBecameActive(notification: NSNotification) {
         
     }
     
-    @objc public func applicationBecameInactive(notification: NSNotification) {
+    @objc open func applicationBecameInactive(notification: NSNotification) {
         
     }
 }
