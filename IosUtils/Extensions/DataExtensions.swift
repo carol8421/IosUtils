@@ -44,6 +44,28 @@ public extension Data {
             try write(to: fileURL, options: .atomic)
         }
     }
+    
+    func toHex() -> String {
+        return map { String(format: "%02hhX", $0) }.joined()
+    }
+    
+    func toHex(from:Int, to:Int) -> String {
+        return self.subdata(in: from..<to).toHex()
+    }
+    
+    func toArrayUInt8() -> [UInt8] {
+        var array = [UInt8]()
+        self.withUnsafeBytes {  (pointer: UnsafePointer<UInt8>) in
+            array = Array(UnsafeBufferPointer(start: pointer, count: self.count))
+        }
+        return array
+    }
+    
+    static func fromArrayUInt8(_ arr:[UInt8]) -> Data {
+        var data = Data()
+        data.append(contentsOf: arr)
+        return data
+    }
 }
 
 public extension Int {
